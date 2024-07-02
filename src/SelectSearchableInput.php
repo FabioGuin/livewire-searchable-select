@@ -45,7 +45,7 @@ class SelectSearchableInput extends Component
         int $minCharsToSearch,
         ?string $inputPlaceholder,
         ?string $modelApp,
-        ?int $maxResultListLength = 0,
+        ?int $maxResultListLength = 10,
         mixed $activeValue = null,
         ?string $inputExtraClasses = null
     ): void {
