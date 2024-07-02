@@ -43,10 +43,10 @@ class SelectInput extends Component
         string $showOnOption,
         string $valueOnOption,
         int $minCharsToSearch,
-        mixed $activeValue = null,
         ?int $maxResultListLength,
         ?string $inputPlaceholder,
         ?string $modelApp,
+        mixed $activeValue = null,
         ?string $inputExtraClasses = null
     ): void {
         // Input-related properties
