@@ -1,13 +1,13 @@
 <?php
 
-namespace FabioGuin\LivewireSelect;
+namespace FabioGuin\LivewireSearchableSelect;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
-class SelectInput extends Component
+class SelectSearchableInput extends Component
 {
     public string $property;
 
@@ -43,9 +43,9 @@ class SelectInput extends Component
         string $showOnOption,
         string $valueOnOption,
         int $minCharsToSearch,
-        ?int $maxResultListLength,
         ?string $inputPlaceholder,
         ?string $modelApp,
+        ?int $maxResultListLength = 0,
         mixed $activeValue = null,
         ?string $inputExtraClasses = null
     ): void {
@@ -71,7 +71,7 @@ class SelectInput extends Component
 
     public function render()
     {
-        return view('livewire-select::select-input');
+        return view('livewire-searchable-select::select-searchable-input');
     }
 
     /**
@@ -120,7 +120,7 @@ class SelectInput extends Component
 
             // If there are no results, set a message
             if ($this->results->count() == 0) {
-                $this->setMessage(trans('livewire-select::messages.no_results'));
+                $this->setMessage(trans('livewire-searchable-select::messages.no_results'));
             }
         } else {
             $this->setMessage(trans('Set the correct app model!')); // Set a message to specify the correct app model
@@ -130,7 +130,7 @@ class SelectInput extends Component
     private function checkMinLength(): bool
     {
         if (isset($this->minCharsToSearch) and strlen($this->searchTherm) < $this->minCharsToSearch) {
-            $this->setMessage(trans('livewire-select::messages.min_length', ['min' => $this->minCharsToSearch]));
+            $this->setMessage(trans('livewire-searchable-select::messages.min_length', ['min' => $this->minCharsToSearch]));
 
             return false;
         } else {

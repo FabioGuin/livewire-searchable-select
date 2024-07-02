@@ -2,7 +2,7 @@
     "name": "fabioguin/livewire-searchable-select",
     "description": "Livewire component for searchable select inputs",
     "keywords": ["laravel", "tailwind", "livewire", "select input", "component", "search", "input", "select2", "searchable"],
-    "homepage": "https://github.com/fabioguin/livewire-select",
+    "homepage": "https://github.com/fabioguin/livewire-searchable-select",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -23,13 +23,13 @@
     },
     "autoload": {
         "psr-4": {
-            "FabioGuin\\LivewireSelect\\": "src"
+            "FabioGuin\\LivewireSearchableSelect\\": "src"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "FabioGuin\\LivewireSelect\\LivewireSearchableSelectServiceProvider"
+                "FabioGuin\\LivewireSearchableSelect\\LivewireSearchableSelectServiceProvider"
             ],
             "aliases": {
             }

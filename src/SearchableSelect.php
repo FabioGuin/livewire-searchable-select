@@ -1,6 +1,6 @@
 <?php
 
-namespace FabioGuin\LivewireSelect;
+namespace FabioGuin\LivewireSearchableSelect;
 
 use Livewire\Attributes\On;
 

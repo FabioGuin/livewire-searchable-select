@@ -1,9 +1,9 @@
 <?php
 
-namespace FabioGuin\LivewireSelect;
+namespace FabioGuin\LivewireSearchableSelect;
 
-use FabioGuin\LivewireSelect\View\Components\ClearButton;
-use FabioGuin\LivewireSelect\View\Components\LoadingIndicator;
+use FabioGuin\LivewireSearchableSelect\View\Components\ClearButton;
+use FabioGuin\LivewireSearchableSelect\View\Components\LoadingIndicator;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
@@ -24,12 +24,12 @@ class LivewireSearchableSelectServiceProvider extends ServiceProvider
 
     protected function registerViews(): void
     {
-        $this->loadViewsFrom(__DIR__.'/resources/views', 'livewire-select');
+        $this->loadViewsFrom(__DIR__.'/resources/views', 'livewire-searchable-select');
 
         // Publish views for customization
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/resources/views' => resource_path('views/vendor/livewire-select'),
+                __DIR__.'/resources/views' => resource_path('views/vendor/livewire-searchable-select'),
             ], 'views');
         }
     }
@@ -42,32 +42,32 @@ class LivewireSearchableSelectServiceProvider extends ServiceProvider
 
     protected function registerLivewireComponents(): void
     {
-        Livewire::component('select-input', SelectInput::class);
+        Livewire::component('select-searchable-input', SelectSearchableInput::class);
     }
 
     protected function registerConfig(): void
     {
         // Load the config file
         $this->mergeConfigFrom(
-            __DIR__.'/config/livewire-select.php', 'livewire-select'
+            __DIR__.'/config/livewire-searchable-select.php', 'livewire-searchable-select'
         );
 
         // Publish the config file
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/config/livewire-select.php' => config_path('livewire-select.php'),
+                __DIR__.'/config/livewire-searchable-select.php' => config_path('livewire-searchable-select.php'),
             ], 'config');
         }
     }
 
     protected function registerTranslations(): void
     {
-        $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'livewire-select');
+        $this->loadTranslationsFrom(__DIR__.'/resources/lang', 'livewire-searchable-select');
 
         // Publish translations
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/resources/lang' => resource_path('lang/vendor/livewire-select'),
+                __DIR__.'/resources/lang' => resource_path('lang/vendor/livewire-searchable-select'),
             ], 'lang');
         }
     }

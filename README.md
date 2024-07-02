@@ -2,7 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/fabioguin/livewire-searchable-select.svg?style=for-the-badge)](https://packagist.org/packages/fabioguin/livewire-searchable-select)
 [![Total Downloads](https://img.shields.io/packagist/dt/fabioguin/livewire-searchable-select.svg?style=for-the-badge)](https://packagist.org/packages/fabioguin/livewire-searchable-select)
-[![GitHub license](https://img.shields.io/github/license/fabioguin/livewire-searchable-select?style=for-the-badge)](https://github.com/mitratek/livewire-select/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/fabioguin/livewire-searchable-select?style=for-the-badge)](https://github.com/fabioguin/livewire-searchable-select/blob/master/LICENSE)
 
 Livewire component for searchable select inputs
 
@@ -29,22 +29,22 @@ composer require fabioguin/livewire-searchable-select
 namespace App\Http\Livewire\CreateUser
 
 use Livewire\Component;
-use FabioGuin\LivewireSelect\SearchableSelect;
+use FabioGuin\LivewireSearchableSelect\SearchableSelect;
 
 class CreateUser extends Component
 {
     use SearchableSelect;
 
-    // set properties to get selected value from LivewireSelect
+    // set properties to get selected value from LivewireSearchableSelect
     public int $country_id;
 }
 
 ```
 
-- Use the ```livewire-select``` component in your blade view, and pass in a parameters:
+- Use the ```livewire-searchable-select``` component in your blade view, and pass in a parameters:
 ```html
 
-<livewire:select-input
+<livewire:select-searchable-input
         property="country_id"
         model-app="\App\Models\Country"
         :search-columns="['name']"
@@ -69,7 +69,7 @@ class CreateUser extends Component
 | **active-value**           | *Mixed - optional* set active value                  | Define the default selected option                                                                                                                                                                        | ```active-value="{{ request()->user()->country_id }}"``` |
 | **min-chars-to-search**    | *Int - optional* minimum character                   | Define minimum character for trigger search event; default: 0                                                                                                                                             | ```:min-chars-to-search="2"```                           |
 | **max-result-list-length** | *Int - optional* max results to view in the dropdown | Define the lenght of result for dropdown; default: 10                                                                                                                                                     | ```:max-result-list-length="15"```                       |
-| **input-extra-classes**    | *String - optional* add extra classes                | Define the extra classes for the input, anyway each element has a class without defined attributes that can be exploited for customization, for example: "select-input", "select-input-clear-value", etc. | ```input-extra-classes="mt-3"```                         |
+| **input-extra-classes**    | *String - optional* add extra classes                | Define the extra classes for the input, anyway each element has a class without defined attributes that can be exploited for customization, for example: "select-searchable-input", "select-searchable-input-clear-value", etc. | ```input-extra-classes="mt-3"```                         |
 | **input-placeholder**            | *String - optional* placeholder name                 | Define the placeholder for select input                                                                                                                                                                   | ```input-placeholder="Select country"```                 |
 
 ## Customization
@@ -79,28 +79,28 @@ class CreateUser extends Component
 You can publish the configuration file with:
 
 ```bash
-php artisan vendor:publish --provider="FabioGuin\LivewireSelect\LivewireSelectServiceProvider" --tag="config"
+php artisan vendor:publish --provider="FabioGuin\LivewireSearchableSelect\LivewireSelectServiceProvider" --tag="config"
 ```
 
-This will publish a **livewire-select.php** config file to your config directory. Here you can change the default settings of **Livewire Select**.
+This will publish a **livewire-searchable-select.php** config file to your config directory. Here you can change the default settings of **Livewire Select**.
 
 ### Views
 If you need to modify the views, you can publish them with:
 
 ```bash
-php artisan vendor:publish --provider="FabioGuin\LivewireSelect\LivewireSelectServiceProvider" --tag="views"
+php artisan vendor:publish --provider="FabioGuin\LivewireSearchableSelect\LivewireSelectServiceProvider" --tag="views"
 ```
 
-This will publish the view files to **resources/views/vendor/livewire-select**. You can edit these files to change the appearance of the select input.
+This will publish the view files to **resources/views/vendor/livewire-searchable-select**. You can edit these files to change the appearance of the select input.
 
 ### Language
 To customize the language strings, you can publish the language files with:
 
 ```bash
-php artisan vendor:publish --provider="FabioGuin\LivewireSelect\LivewireSelectServiceProvider" --tag="lang"
+php artisan vendor:publish --provider="FabioGuin\LivewireSearchableSelect\LivewireSelectServiceProvider" --tag="lang"
 ```
 
-This will publish the language files to **resources/lang/vendor/livewire-select**. You can edit these files to change the text used by **Livewire Select**.
+This will publish the language files to **resources/lang/vendor/livewire-searchable-select**. You can edit these files to change the text used by **Livewire Select**.
 
 ## TODO and Future Developments
 The **Livewire Select** package is currently under development and there are several features and improvements planned for future releases. 
