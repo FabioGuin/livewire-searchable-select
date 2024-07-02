@@ -1,0 +1,61 @@
+# Laravel specific
+/bootstrap/cache/
+/storage/*.key
+/storage/media-library/*
+/public/hot
+/public/storage
+/public/build
+
+# Laravel environment files
+.env
+.env.backup
+.env.production
+.env.develop
+
+# Laravel 4 specific
+bootstrap/compiled.php
+app/storage/
+
+# Laravel 5 & Lumen specific
+public/storage
+public/hot
+
+# Laravel 5 & Lumen specific with changed public path
+public_html/storage
+public_html/hot
+
+# PHPUnit
+/.phpunit.cache
+.phpunit.result.cache
+
+# Homestead files
+Homestead.json
+Homestead.yaml
+
+# Node and npm
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# Vendor directory
+/vendor
+
+# Fleet directory
+/.fleet
+
+# IDEs and editors
+/.idea
+/.vscode
+
+# OS generated files
+.DS_Store
+
+# Vagrant
+/.vagrant
+
+# Other
+auth.json
+
+.blueprint
+.php-cs-fixer.cache
+.php-cs-fixer.dist.php
