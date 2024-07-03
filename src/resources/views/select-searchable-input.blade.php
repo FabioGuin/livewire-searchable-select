@@ -3,9 +3,9 @@
            @click.away="dropdownOpen = false; $wire.set('message', null)"
            type="text"
            wire:model="searchTherm"
-           wire:input="getResults"
-           wire:keydown="getResults"
-           wire:keydown.delete="getResults"
+           wire:input="getResults; dropdownOpen = true"
+           wire:keydown="getResults; dropdownOpen = true"
+           wire:keydown.delete="getResults; dropdownOpen = true"
            class="select-searchable-input form-control {{ $inputExtraClasses }}"
            placeholder="{{ $inputPlaceholder }}" />
 
