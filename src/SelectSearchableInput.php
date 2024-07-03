@@ -130,7 +130,7 @@ class SelectSearchableInput extends Component
                 $this->setMessage(trans('livewire-searchable-select::messages.no_results'));
             }
         } else {
-            $this->setMessage(trans('Set the correct app model!')); // Set a message to specify the correct app model
+            $this->setMessage('Set the correct app model!'); // Set a message to specify the correct app model
         }
     }
 
