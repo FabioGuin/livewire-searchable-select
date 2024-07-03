@@ -17,15 +17,15 @@ class SelectSearchableInput extends Component
 
     public string $optionText;
 
-    public string $optionValue;
+    public string $optionValueColumn;
 
     public mixed $activeOptionText = null;
 
     public mixed $activeOptionValue = null;
 
-    public int $minCharsToSearch = 0;
+    public int $searchMinChars = 0;
 
-    public ?int $maxResultListLength = 10;
+    public ?int $searchLimitResults = 10;
 
     public ?string $inputPlaceholder = null;
 
@@ -43,11 +43,11 @@ class SelectSearchableInput extends Component
         string $property,
         array $searchColumns,
         string $optionText,
-        string $optionValue,
-        int $minCharsToSearch,
+        string $optionValueColumn,
+        int $searchMinChars,
         ?string $inputPlaceholder,
         ?string $modelApp,
-        ?int $maxResultListLength = 10,
+        ?int $searchLimitResults = 10,
         mixed $activeOptionText = null,
         mixed $activeOptionValue = null,
         ?string $inputExtraClasses = null
@@ -58,13 +58,13 @@ class SelectSearchableInput extends Component
         $this->inputExtraClasses = $inputExtraClasses;
 
         // Search-related properties
-        $this->minCharsToSearch = $minCharsToSearch;
-        $this->maxResultListLength = $maxResultListLength;
+        $this->searchMinChars = $searchMinChars;
+        $this->searchLimitResults = $searchLimitResults;
         $this->searchColumns = $searchColumns;
 
         // Data properties
         $this->optionText = $optionText;
-        $this->optionValue = $optionValue;
+        $this->optionValueColumn = $optionValueColumn;
         $this->modelApp = $modelApp;
 
         // Active value
@@ -119,8 +119,8 @@ class SelectSearchableInput extends Component
 
             $query = $query->orderBy('relevance', 'desc'); // Order by relevance score
 
-            if (isset($this->maxResultListLength)) {
-                $query = $query->limit($this->maxResultListLength); // Limit the number of results
+            if (isset($this->searchLimitResults)) {
+                $query = $query->limit($this->searchLimitResults); // Limit the number of results
             }
 
             $this->results = $this->buildOptions($query->get()); // Build options based on the query results
@@ -136,8 +136,8 @@ class SelectSearchableInput extends Component
 
     private function checkMinLength(): bool
     {
-        if (isset($this->minCharsToSearch) and strlen($this->searchTherm) < $this->minCharsToSearch) {
-            $this->setMessage(trans('livewire-searchable-select::messages.min_length', ['min' => $this->minCharsToSearch]));
+        if (isset($this->searchMinChars) and strlen($this->searchTherm) < $this->searchMinChars) {
+            $this->setMessage(trans('livewire-searchable-select::messages.min_length', ['min' => $this->searchMinChars]));
 
             return false;
         } else {
@@ -149,7 +149,7 @@ class SelectSearchableInput extends Component
     {
         return $dataList->map(function ($value) {
             return [
-                'id' => $value->{$this->optionValue},
+                'id' => $value->{$this->optionValueColumn},
                 'value' => preg_replace_callback('#\{(.*?)}#', fn ($matches) => $value->{$matches[1]}, $this->optionText),
             ];
         });
