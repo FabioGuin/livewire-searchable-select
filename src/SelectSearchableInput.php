@@ -89,7 +89,7 @@ class SelectSearchableInput extends Component
     public function getResults(): void
     {
         // Check if the search query meets the minimum length requirement
-        if (! $this->checkMinLength()) {
+        if (! $this->isSearchTermLengthValid()) {
             $this->results = collect(); // Set results to an empty collection
 
             return;
@@ -134,7 +134,7 @@ class SelectSearchableInput extends Component
         }
     }
 
-    private function checkMinLength(): bool
+    private function isSearchTermLengthValid(): bool
     {
         if (isset($this->searchMinChars) and strlen($this->searchTherm) < $this->searchMinChars) {
             $this->setMessage(trans('livewire-searchable-select::messages.min_length', ['min' => $this->searchMinChars]));
@@ -145,7 +145,7 @@ class SelectSearchableInput extends Component
         }
     }
 
-    protected function buildOptions($dataList)
+    protected function buildOptions($dataList): Collection
     {
         return $dataList->map(function ($value) {
             return [
