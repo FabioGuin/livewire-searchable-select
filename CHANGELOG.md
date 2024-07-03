@@ -15,7 +15,8 @@
 ## [1.0.3] - 2024-07-03
 ### Improving
 - Improved semantic naming of options properties
-- 
+
 ## [1.0.4] - 2024-07-03
 ### Improving
 - Improved semantic naming of search properties
+- Setting null message property when away
