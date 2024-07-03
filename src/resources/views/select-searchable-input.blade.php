@@ -1,6 +1,6 @@
 <div x-data="{ dropdownOpen: false }" class="position-relative">
     <input @click="dropdownOpen = ! dropdownOpen; $wire.set('searchTherm', null)"
-           @click.away="dropdownOpen = false"
+           @click.away="dropdownOpen = false; $wire.set('message', null)"
            type="text"
            wire:model="searchTherm"
            wire:input="getResults"
