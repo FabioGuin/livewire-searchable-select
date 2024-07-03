@@ -20,3 +20,8 @@
 ### Improving
 - Improved semantic naming of search properties
 - Setting null message property when away
+
+## [1.0.5] - 2024-07-03
+### Improving
+- Some minor fix
+- Fix bind dropdownOpen Alpine property on the wire events
