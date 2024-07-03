@@ -19,7 +19,9 @@ class SelectSearchableInput extends Component
 
     public string $valueOnOption;
 
-    public mixed $activeValue = null;
+    public mixed $activeValueName = null;
+
+    public mixed $activeValueId = null;
 
     public int $minCharsToSearch = 0;
 
@@ -46,7 +48,8 @@ class SelectSearchableInput extends Component
         ?string $inputPlaceholder,
         ?string $modelApp,
         ?int $maxResultListLength = 10,
-        mixed $activeValue = null,
+        mixed $activeValueName = null,
+        mixed $activeValueId = null,
         ?string $inputExtraClasses = null
     ): void {
         // Input-related properties
@@ -65,8 +68,12 @@ class SelectSearchableInput extends Component
         $this->modelApp = $modelApp;
 
         // Active value
-        $this->activeValue = $activeValue;
-        $this->searchTherm = $this->activeValue;
+        $this->activeValueName = $activeValueName;
+        $this->activeValueId = $activeValueId;
+
+        if ($this->activeValueName !== null && $this->activeValueId !== null) {
+            $this->getValueOnOption($this->activeValueId, $this->activeValueName);
+        }
     }
 
     public function render()
