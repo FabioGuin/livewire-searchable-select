@@ -31,7 +31,7 @@
         <div x-show="dropdownOpen" class="select-searchable-input-dropdown position-absolute z-index-1000 w-100 bg-light rounded-bottom shadow-lg max-h-52 overflow-auto">
 
             @foreach($results as $data)
-                <div wire:click="getValueOnOption('{{ addslashes(e($data['id'])) }}', '{{ addslashes(e($data['value'])) }}')"
+                <div wire:click="getValueOption('{{ addslashes(e($data['id'])) }}', '{{ addslashes(e($data['value'])) }}')"
                      wire:key="option-{{ $loop->index }}"
                      class="select-searchable-input-dropdown-option px-2 py-1 cursor-pointer">
                     {{ $data['value'] }}

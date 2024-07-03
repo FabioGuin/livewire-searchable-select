@@ -5,9 +5,13 @@
 - First release of package
 
 ## [1.0.1] - 2024-07-02
-### Fix
+### Fixing
 - Fix and uniform
 
 ## [1.0.2] - 2024-07-03
-### Feature
+### Featuring
 - Mount active name and id for giving default value if exist
+
+## [1.0.3] - 2024-07-03
+### Improving
+- Improved semantic naming of properties

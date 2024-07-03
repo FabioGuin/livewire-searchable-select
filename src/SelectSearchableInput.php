@@ -15,13 +15,13 @@ class SelectSearchableInput extends Component
 
     public array $searchColumns;
 
-    public string $showOnOption;
+    public string $optionText;
 
-    public string $valueOnOption;
+    public string $optionValue;
 
-    public mixed $activeValueName = null;
+    public mixed $activeOptionText = null;
 
-    public mixed $activeValueId = null;
+    public mixed $activeOptionValue = null;
 
     public int $minCharsToSearch = 0;
 
@@ -42,14 +42,14 @@ class SelectSearchableInput extends Component
     public function mount(
         string $property,
         array $searchColumns,
-        string $showOnOption,
-        string $valueOnOption,
+        string $optionText,
+        string $optionValue,
         int $minCharsToSearch,
         ?string $inputPlaceholder,
         ?string $modelApp,
         ?int $maxResultListLength = 10,
-        mixed $activeValueName = null,
-        mixed $activeValueId = null,
+        mixed $activeOptionText = null,
+        mixed $activeOptionValue = null,
         ?string $inputExtraClasses = null
     ): void {
         // Input-related properties
@@ -63,16 +63,16 @@ class SelectSearchableInput extends Component
         $this->searchColumns = $searchColumns;
 
         // Data properties
-        $this->showOnOption = $showOnOption;
-        $this->valueOnOption = $valueOnOption;
+        $this->optionText = $optionText;
+        $this->optionValue = $optionValue;
         $this->modelApp = $modelApp;
 
         // Active value
-        $this->activeValueName = $activeValueName;
-        $this->activeValueId = $activeValueId;
+        $this->activeOptionText = $activeOptionText;
+        $this->activeOptionValue = $activeOptionValue;
 
-        if ($this->activeValueName !== null && $this->activeValueId !== null) {
-            $this->getValueOnOption($this->activeValueId, $this->activeValueName);
+        if ($this->activeOptionText !== null && $this->activeOptionValue !== null) {
+            $this->getValueOption($this->activeOptionValue, $this->activeOptionText);
         }
     }
 
@@ -149,8 +149,8 @@ class SelectSearchableInput extends Component
     {
         return $dataList->map(function ($value) {
             return [
-                'id' => $value->{$this->valueOnOption},
-                'value' => preg_replace_callback('#\{(.*?)}#', fn ($matches) => $value->{$matches[1]}, $this->showOnOption),
+                'id' => $value->{$this->optionValue},
+                'value' => preg_replace_callback('#\{(.*?)}#', fn ($matches) => $value->{$matches[1]}, $this->optionText),
             ];
         });
     }
@@ -161,7 +161,7 @@ class SelectSearchableInput extends Component
     }
 
     #[Locked]
-    public function getValueOnOption($id, $value): void
+    public function getValueOption($id, $value): void
     {
         $this->searchTherm = $value;
         $this->isSelected = true;
