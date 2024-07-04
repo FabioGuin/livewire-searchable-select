@@ -81,7 +81,7 @@ class CreateUser extends Component
 You can publish the configuration file with:
 
 ```bash
-php artisan vendor:publish --provider="FabioGuin\LivewireSearchableSelect\LivewireSelectServiceProvider" --tag="config"
+php artisan vendor:publish --provider="FabioGuin\LivewireSearchableSelect\LivewireSearchableSelectServiceProvider" --tag="config"
 ```
 
 This will publish a **livewire-searchable-select.php** config file to your config directory. Here you can change the default settings of **Livewire Select**.
@@ -90,7 +90,7 @@ This will publish a **livewire-searchable-select.php** config file to your confi
 If you need to modify the views, you can publish them with:
 
 ```bash
-php artisan vendor:publish --provider="FabioGuin\LivewireSearchableSelect\LivewireSelectServiceProvider" --tag="views"
+php artisan vendor:publish --provider="FabioGuin\LivewireSearchableSelect\LivewireSearchableSelectServiceProvider" --tag="views"
 ```
 
 This will publish the view files to **resources/views/vendor/livewire-searchable-select**. You can edit these files to change the appearance of the select input.
@@ -99,7 +99,7 @@ This will publish the view files to **resources/views/vendor/livewire-searchable
 To customize the language strings, you can publish the language files with:
 
 ```bash
-php artisan vendor:publish --provider="FabioGuin\LivewireSearchableSelect\LivewireSelectServiceProvider" --tag="lang"
+php artisan vendor:publish --provider="FabioGuin\LivewireSearchableSelect\LivewireSearchableSelectServiceProvider" --tag="lang"
 ```
 
 This will publish the language files to **resources/lang/vendor/livewire-searchable-select**. You can edit these files to change the text used by **Livewire Select**.

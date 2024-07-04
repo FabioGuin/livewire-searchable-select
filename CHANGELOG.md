@@ -25,3 +25,7 @@
 ### Improving
 - Some minor fix
 - Fix bind dropdownOpen Alpine property on the wire events
+
+## [1.0.6] - 2024-07-04
+### Improving
+- Fix docs
