@@ -1,4 +1,4 @@
-# Livewire Select
+# Livewire Searchable Select
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/fabioguin/livewire-searchable-select.svg?style=for-the-badge)](https://packagist.org/packages/fabioguin/livewire-searchable-select)
 [![Total Downloads](https://img.shields.io/packagist/dt/fabioguin/livewire-searchable-select.svg?style=for-the-badge)](https://packagist.org/packages/fabioguin/livewire-searchable-select)
