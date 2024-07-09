@@ -59,3 +59,5 @@ auth.json
 .blueprint
 .php-cs-fixer.cache
 .php-cs-fixer.dist.php
+
+/__misc
