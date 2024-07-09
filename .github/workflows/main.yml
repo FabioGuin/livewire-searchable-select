@@ -15,7 +15,7 @@ jobs:
       matrix:
         php: [8.2]
         laravel: [10.*, 11.*]
-        phpunit-versions: ['10.1', latest]
+        phpunit-versions: ['10.1']
 
     steps:
     - name: Checkout code
