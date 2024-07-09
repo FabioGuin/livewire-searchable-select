@@ -1,4 +1,4 @@
-name: PHPUnit
+name: Dependency Check
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 env:
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -39,6 +39,3 @@ jobs:
         run: |
           composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update --dev
           composer update --prefer-stable --no-interaction
-
-      - name: Run tests
-        run: composer run-script test
