@@ -10,36 +10,35 @@ env:
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
   
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - php: '8.2'
-            laravel: '10.*'
-            phpunit-versions: '10.1'
-          - php: '8.2'
-            laravel: '11.*'
-            phpunit-versions: '10.1'
+        php: [8.1, 8.2, 8.3]
+        laravel: [10.*, 11.*]
+        exclude:
+          - php: 8.1
+            laravel: 11.*
+
+    name: PHP:${{ matrix.php }} / Laravel:${{ matrix.laravel }}
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: ${{ matrix.php }}
-        extensions: mbstring, ctype, fileinfo, openssl, PDO, bcmath, json, tokenizer, xml
-        tools: phpunit:${{ matrix.phpunit-versions }}
-        coverage: none
+      - name: Setup PHP, with composer and extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, iconv, intl, zip, pdo_sqlite
+          tools: composer:v2
+          coverage: none
 
-    - name: Install dependencies
-      run: |
-        composer require "laravel/framework:${{ matrix.laravel }}" --no-update --no-interaction --prefer-dist
-        composer install --prefer-dist --no-interaction --no-suggest
+      - name: Install Composer dependencies
+        run: |
+          composer require "laravel/framework:${{ matrix.laravel }}" --no-interaction --no-update --dev
+          composer update --prefer-stable --no-interaction
 
-    - name: Run tests
-      run: composer run-script test
+      - name: Run tests
+        run: composer run-script test
