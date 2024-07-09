@@ -163,6 +163,7 @@ class SelectSearchableInput extends Component
     #[Locked]
     public function getValueOption($id, $value): void
     {
+        $value = htmlspecialchars_decode($value, ENT_QUOTES);
         $this->searchTherm = $value;
         $this->isSelected = true;
         $this->message = null;
