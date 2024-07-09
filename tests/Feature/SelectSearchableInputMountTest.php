@@ -102,4 +102,5 @@ class SelectSearchableInputMountTest extends TestCase
         $this->assertTrue($this->component->isSelected);
         $this->assertNull($this->component->message);
     }
+    
 }
