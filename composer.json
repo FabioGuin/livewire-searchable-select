@@ -23,7 +23,8 @@
     },
     "autoload": {
         "psr-4": {
-            "FabioGuin\\LivewireSearchableSelect\\": "src"
+            "FabioGuin\\LivewireSearchableSelect\\": "src",
+            "FabioGuin\\LivewireSearchableSelect\\Tests\\": "tests"
         }
     },
     "extra": {
@@ -39,6 +40,7 @@
     "prefer-stable": true,
     "require-dev": {
         "orchestra/testbench": "^8.0",
-        "laravel/pint": "^1.16"
+        "laravel/pint": "^1.16",
+        "phpunit/phpunit": "^10.1"
     }
 }
