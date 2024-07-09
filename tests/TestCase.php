@@ -3,6 +3,7 @@
 namespace FabioGuin\LivewireSearchableSelect\Tests;
 
 use FabioGuin\LivewireSearchableSelect\LivewireSearchableSelectServiceProvider;
+use FabioGuin\LivewireSearchableSelect\SelectSearchableInput;
 use Livewire\LivewireServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
@@ -10,7 +11,8 @@ class TestCase extends \Orchestra\Testbench\TestCase
     public function setUp(): void
     {
         parent::setUp();
-        // additional setup
+
+        $this->component = new SelectSearchableInput;
     }
 
     protected function getPackageProviders($app): array
