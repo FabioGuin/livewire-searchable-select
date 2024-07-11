@@ -47,6 +47,7 @@ class CreateUser extends Component
 <livewire:select-searchable-input
         property="country_id"
         model-app="\App\Models\Country"
+        model-app-scope="isActive"
         option-text="{name}"
         option-value-column="id"
         active-option-text="{{ request()->user()->country_name }}"
@@ -63,7 +64,8 @@ class CreateUser extends Component
 | Property                 | Arguments                                            | Result                                                                                                                                                                                                                          | Example                                                          |
 |--------------------------|------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------|
 | **property**             | *String - required* property name                    | Define the property name                                                                                                                                                                                                        | ```property="country_id"```                                      |
-| **model-app**            | *String - required* full model name full collection  | Define the source of data that will be select                                                                                                                                                                                   | ```model-app="\App\Models\Country"```                            |
+| **model-app**            | *String - required* full model name                  | Define the source of data that will be select                                                                                                                                                                                   | ```model-app="\App\Models\Country"```                            |
+| **model-app-scope**      | *String - optional* name of model sope               | Define model scope for filtering results                                                                                                                                                                                        | ```model-scope-app="isActive"```                                 |
 | **option-text**          | *String - required* show column on option            | Define the column(s) in model that want to be show in select option                                                                                                                                                             | ```option-text="{id} - {name} ({abbreviation})"```               |
 | **option-value-column**  | *String - required* set value                        | Define the column name as a value data that will be selected                                                                                                                                                                    | ```option-value-column="id"```                                   |
 | **active-option-text**   | *Mixed - optional* set active value text             | Define the default selected option to show on select                                                                                                                                                                            | ```active-option-text="{{ request()->user()->country_name }}"``` |
@@ -73,6 +75,10 @@ class CreateUser extends Component
 | **search-limit-results** | *Int - optional* max results to view in the dropdown | Define the lenght of result for dropdown; default: 10                                                                                                                                                                           | ```:search-limit-results="15"```                                 |
 | **input-extra-classes**  | *String - optional* add extra classes                | Define the extra classes for the input, anyway each element has a class without defined attributes that can be exploited for customization, for example: "select-searchable-input", "select-searchable-input-clear-value", etc. | ```input-extra-classes="mt-3"```                                 |
 | **input-placeholder**    | *String - optional* placeholder name                 | Define the placeholder for select input                                                                                                                                                                                         | ```input-placeholder="Select country"```                         |
+
+## model-app-scope
+With this parameter you can define a query scope of the model to filter the search results in a complex way (see official Laravel documentation). This makes the component even more flexible and usable in multiple contexts. Remember to use a string with the **camel case** syntax without specifying that it is a "_scope_" (see example).
+
 
 ## Customization
 **Livewire Select** is designed to be easily customizable. You can publish and modify the configuration, views, and language files to suit your needs.

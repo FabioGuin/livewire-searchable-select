@@ -39,6 +39,8 @@ class SelectSearchableInput extends Component
 
     public ?string $inputExtraClasses = null;
 
+    public ?string $modelAppScope = null;
+
     public function mount(
         string $property,
         array $searchColumns,
@@ -50,7 +52,8 @@ class SelectSearchableInput extends Component
         ?int $searchLimitResults = 10,
         mixed $activeOptionText = null,
         mixed $activeOptionValue = null,
-        ?string $inputExtraClasses = null
+        ?string $inputExtraClasses = null,
+        ?string $modelAppScope = null
     ): void {
         // Input-related properties
         $this->property = $property;
@@ -66,6 +69,7 @@ class SelectSearchableInput extends Component
         $this->optionText = $optionText;
         $this->optionValueColumn = $optionValueColumn;
         $this->modelApp = $modelApp;
+        $this->modelAppScope = $modelAppScope;
 
         // Active value
         $this->activeOptionText = $activeOptionText;
@@ -101,10 +105,23 @@ class SelectSearchableInput extends Component
         if ($this->modelApp != null && class_exists($this->modelApp)) {
             $query = $this->modelApp::query(); // Create a query based on the modelApp
 
-            // Add search conditions for each search column
-            foreach ($this->searchColumns as $column) {
-                $query = $query->orWhere($column, 'like', '%'.$this->searchTherm.'%');
+            // Check if scope is set and the method exists
+            if ($this->modelAppScope){
+                if (method_exists($this->modelApp, 'scope' . ucfirst($this->modelAppScope))) {
+                    $query = $query->{$this->modelAppScope}($query);
+                } else {
+                    $this->setMessage('Scope not found in this model!');
+
+                    return;
+                }
             }
+
+            // Add search conditions for each search column
+            $query = $query->where(function ($query) {
+                foreach ($this->searchColumns as $column) {
+                    $query->orWhere($column, 'like', '%' . $this->searchTherm . '%');
+                }
+            });
 
             // Add a relevance score based on the search term
             $query = $query->select('*', DB::raw("(
