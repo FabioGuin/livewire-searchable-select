@@ -102,4 +102,27 @@ class SelectSearchableInputMountTest extends TestCase
         $this->assertTrue($this->component->isSelected);
         $this->assertNull($this->component->message);
     }
+
+    /** @test */
+    public function testMountSetsModelAppScope()
+    {
+        $modelAppScope = 'active';
+
+        $this->component->mount(
+            '',
+            [],
+            '',
+            '',
+            0,
+            null,
+            '',
+            null,
+            null,
+            null,
+            null,
+            $modelAppScope
+        );
+
+        $this->assertEquals($modelAppScope, $this->component->modelAppScope);
+    }
 }

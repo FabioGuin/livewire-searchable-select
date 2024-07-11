@@ -18,7 +18,7 @@ class PublishTest extends TestCase
     {
         $this->artisan('vendor:publish', [
             '--provider' => 'FabioGuin\LivewireSearchableSelect\LivewireSearchableSelectServiceProvider',
-            '--tag' => 'views'
+            '--tag' => 'views',
         ])->assertExitCode(0);
     }
 
@@ -27,7 +27,7 @@ class PublishTest extends TestCase
     {
         $this->artisan('vendor:publish', [
             '--provider' => 'FabioGuin\LivewireSearchableSelect\LivewireSearchableSelectServiceProvider',
-            '--tag' => 'config'
+            '--tag' => 'config',
         ])->assertExitCode(0);
     }
 
@@ -36,7 +36,7 @@ class PublishTest extends TestCase
     {
         $this->artisan('vendor:publish', [
             '--provider' => 'FabioGuin\LivewireSearchableSelect\LivewireSearchableSelectServiceProvider',
-            '--tag' => 'lang'
+            '--tag' => 'lang',
         ])->assertExitCode(0);
     }
 }

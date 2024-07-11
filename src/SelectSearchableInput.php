@@ -106,8 +106,8 @@ class SelectSearchableInput extends Component
             $query = $this->modelApp::query(); // Create a query based on the modelApp
 
             // Check if scope is set and the method exists
-            if ($this->modelAppScope){
-                if (method_exists($this->modelApp, 'scope' . ucfirst($this->modelAppScope))) {
+            if ($this->modelAppScope) {
+                if (method_exists($this->modelApp, 'scope'.ucfirst($this->modelAppScope))) {
                     $query = $query->{$this->modelAppScope}($query);
                 } else {
                     $this->setMessage('Scope not found in this model!');
@@ -119,7 +119,7 @@ class SelectSearchableInput extends Component
             // Add search conditions for each search column
             $query = $query->where(function ($query) {
                 foreach ($this->searchColumns as $column) {
-                    $query->orWhere($column, 'like', '%' . $this->searchTherm . '%');
+                    $query->orWhere($column, 'like', '%'.$this->searchTherm.'%');
                 }
             });
 
