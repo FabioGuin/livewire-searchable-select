@@ -2,13 +2,15 @@
 
 namespace FabioGuin\LivewireSearchableSelect;
 
+use FabioGuin\LivewireSearchableSelect\Traits\Searchable;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class SelectSearchableInput extends Component
 {
+    use Searchable;
+
     public string $property;
 
     public string $modelApp;
@@ -92,63 +94,38 @@ class SelectSearchableInput extends Component
      */
     public function getResults(): void
     {
-        // Check if the search query meets the minimum length requirement
         if (! $this->isSearchTermLengthValid()) {
-            $this->results = collect(); // Set results to an empty collection
+            $this->results = collect();
 
             return;
         }
 
-        $this->isSelected = false; // Reset isSelected flag
+        $this->isSelected = false;
 
-        // Check if modelApp is set and the class exists
         if ($this->modelApp != null && class_exists($this->modelApp)) {
-            $query = $this->modelApp::query(); // Create a query based on the modelApp
+            $query = $this->modelApp::query();
 
-            // Check if scope is set and the method exists
-            if ($this->modelAppScope) {
-                if (method_exists($this->modelApp, 'scope'.ucfirst($this->modelAppScope))) {
-                    $query = $query->{$this->modelAppScope}($query);
-                } else {
-                    $this->setMessage('Scope not found in this model!');
+            $query = $this->applyScopeToQuery($query);
+            $query = $this->applySearchConditionsToQuery($query);
+            $query = $this->applyRelevanceScoreToQuery($query);
+            $query = $this->applyLimitToQuery($query);
 
-                    return;
-                }
-            }
-
-            // Add search conditions for each search column
-            $query = $query->where(function ($query) {
-                foreach ($this->searchColumns as $column) {
-                    $query->orWhere($column, 'like', '%'.$this->searchTherm.'%');
-                }
-            });
-
-            // Add a relevance score based on the search term
-            $query = $query->select('*', DB::raw("(
-                CASE
-                    WHEN name LIKE '{$this->searchTherm}' THEN 10 
-                    WHEN name LIKE '{$this->searchTherm}%' THEN 8 
-                    WHEN name LIKE '%{$this->searchTherm}%' THEN 4 
-                    WHEN name LIKE '%{$this->searchTherm}' THEN 2
-                    ELSE 1
-                END
-            ) as relevance"));
-
-            $query = $query->orderBy('relevance', 'desc'); // Order by relevance score
-
-            if (isset($this->searchLimitResults)) {
-                $query = $query->limit($this->searchLimitResults); // Limit the number of results
-            }
-
-            $this->results = $this->buildOptions($query->get()); // Build options based on the query results
-
-            // If there are no results, set a message
-            if ($this->results->count() == 0) {
-                $this->setMessage(trans('livewire-searchable-select::messages.no_results'));
-            }
-        } else {
-            $this->setMessage('Set the correct app model!'); // Set a message to specify the correct app model
+            $this->results = $this->buildOptions($query->get());
         }
+    }
+
+    private function applyScopeToQuery($query)
+    {
+        if ($this->modelAppScope) {
+            if (method_exists($this->modelApp, 'scope'.ucfirst($this->modelAppScope))) {
+                return $query->{$this->modelAppScope}();
+            }
+            $this->setMessage('Scope not found in this model!');
+
+            return $query;
+        }
+
+        return $query;
     }
 
     private function isSearchTermLengthValid(): bool
