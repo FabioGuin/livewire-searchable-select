@@ -114,20 +114,6 @@ class SelectSearchableInput extends Component
         }
     }
 
-    private function applyScopeToQuery($query)
-    {
-        if ($this->modelAppScope) {
-            if (method_exists($this->modelApp, 'scope'.ucfirst($this->modelAppScope))) {
-                return $query->{$this->modelAppScope}();
-            }
-            $this->setMessage('Scope not found in this model!');
-
-            return $query;
-        }
-
-        return $query;
-    }
-
     private function isSearchTermLengthValid(): bool
     {
         if (isset($this->searchMinChars) and strlen($this->searchTherm) < $this->searchMinChars) {
