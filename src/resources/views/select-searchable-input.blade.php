@@ -10,12 +10,12 @@
            placeholder="{{ $inputPlaceholder }}" />
 
     <div class="select-searchable-input-loading position-absolute top-50 end-0 p-2 translate-middle-y">
-        <div wire:loading>
+        <div wire:loading wire:target="getResults">
             <x-loading-indicator />
         </div>
     </div>
 
-    <div wire:loading.remove class="select-searchable-input-clear-value position-absolute top-50 end-0 px-2 translate-middle-y">
+    <div wire:loading.remove wire:target="getResults" class="select-searchable-input-clear-value position-absolute top-50 end-0 px-2 translate-middle-y">
         <div wire:click="clearSelectedValue">
             <x-clear-button />
         </div>
