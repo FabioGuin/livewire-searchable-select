@@ -10,7 +10,7 @@
            placeholder="{{ $inputPlaceholder }}" />
 
     <div class="select-searchable-input-loading position-absolute top-50 end-0 p-2 translate-middle-y">
-        <div wire:loading wire:target="getResults">
+        <div wire:loading wire:target="getResults"> 
             <x-loading-indicator />
         </div>
     </div>

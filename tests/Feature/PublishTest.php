@@ -1,6 +1,6 @@
 <?php
 
-namespace FabioGuin\LivewireSearchableSelect\Tests\Unit;
+namespace FabioGuin\LivewireSearchableSelect\Tests\Feature;
 
 use FabioGuin\LivewireSearchableSelect\Tests\TestCase;
 
