@@ -77,7 +77,12 @@ class SelectSearchableInput extends Component
         $this->activeOptionText = $activeOptionText;
         $this->activeOptionValue = $activeOptionValue;
 
-        if ($this->activeOptionText !== null && $this->activeOptionValue !== null) {
+        if (
+            $this->activeOptionText !== null
+            && $this->activeOptionText !== ''
+            && $this->activeOptionValue !== null
+            && $this->activeOptionValue !== ''
+        ) {
             $this->getValueOption($this->activeOptionValue, $this->activeOptionText);
         }
     }
