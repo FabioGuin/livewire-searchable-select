@@ -122,3 +122,7 @@ Here is a list of the planned tasks:
 - **Support for Other Livewire Features:** We are exploring the possibility of adding support for other Livewire features, such as pagination and lazy loading.
 
 Inspired by https://github.com/mitratek/livewire-select
+
+We ❤️ Semantic Versioning https://semver.org/
+
+Open to work, contact me: https://www.linkedin.com/in/fabio-guin-starzero/
