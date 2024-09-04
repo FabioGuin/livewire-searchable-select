@@ -41,7 +41,7 @@ class SelectSearchableInput extends Component
 
     public ?string $inputExtraClasses = null;
 
-    public ?string $modelAppScope = null;
+    public ?array $modelAppScope = null;
 
     public function mount(
         string $property,
