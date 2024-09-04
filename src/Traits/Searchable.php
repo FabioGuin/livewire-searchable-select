@@ -9,8 +9,13 @@ trait Searchable
     private function applyScopeToQuery($query)
     {
         if ($this->modelAppScope) {
-            if (method_exists($this->modelApp, 'scope'.ucfirst($this->modelAppScope))) {
-                return $query->{$this->modelAppScope}();
+            $scopeMethod = 'scope' . ucfirst($this->modelAppScope['method']);
+            $scopeParam = $this->modelAppScope['param'] ?? null;
+
+            if (method_exists($this->modelApp, $scopeMethod)) {
+                return $scopeParam ?
+                    $query->{$this->modelAppScope['method']}($query, $scopeParam) :
+                    $query->{$this->modelAppScope['method']}($query);
             }
             $this->setMessage('Scope not found in this model!');
 

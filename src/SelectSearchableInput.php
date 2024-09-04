@@ -41,7 +41,7 @@ class SelectSearchableInput extends Component
 
     public ?string $inputExtraClasses = null;
 
-    public ?string $modelAppScope = null;
+    public ?array $modelAppScope = null;
 
     public function mount(
         string $property,
@@ -55,7 +55,7 @@ class SelectSearchableInput extends Component
         mixed $activeOptionText = null,
         mixed $activeOptionValue = null,
         ?string $inputExtraClasses = null,
-        ?string $modelAppScope = null
+        ?array $modelAppScope = null
     ): void {
         // Input-related properties
         $this->property = $property;
