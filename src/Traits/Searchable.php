@@ -31,15 +31,23 @@ trait Searchable
 
     private function applyRelevanceScoreToQuery($query)
     {
+        $cases = [];
+        foreach ($this->searchColumns as $column) {
+            $cases[] = "WHEN {$column} LIKE '{$this->searchTherm}' THEN 10";
+            $cases[] = "WHEN {$column} LIKE '{$this->searchTherm}%' THEN 8";
+            $cases[] = "WHEN {$column} LIKE '%{$this->searchTherm}%' THEN 4";
+            $cases[] = "WHEN {$column} LIKE '%{$this->searchTherm}' THEN 2";
+        }
+
+        $caseStatement = implode(' ', $cases);
+
         return $query->select('*', DB::raw("(
-            CASE
-                WHEN name LIKE '{$this->searchTherm}' THEN 10 
-                WHEN name LIKE '{$this->searchTherm}%' THEN 8 
-                WHEN name LIKE '%{$this->searchTherm}%' THEN 4 
-                WHEN name LIKE '%{$this->searchTherm}' THEN 2
-                ELSE 1
+                CASE
+                    {$caseStatement}
+                    ELSE 1
                 END
-            ) as relevance"))->orderBy('relevance', 'desc');
+            ) as relevance"))
+            ->orderBy('relevance', 'desc');
     }
 
     private function applyLimitToQuery($query)
