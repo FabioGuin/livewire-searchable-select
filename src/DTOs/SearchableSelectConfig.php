@@ -1,6 +1,6 @@
 <?php
 
-namespace FabioGuin\LivewireSearchableSelect\Config;
+namespace FabioGuin\LivewireSearchableSelect\DTOs;
 
 class SearchableSelectConfig
 {

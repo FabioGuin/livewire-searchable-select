@@ -4,13 +4,25 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/fabioguin/livewire-searchable-select.svg?style=for-the-badge)](https://packagist.org/packages/fabioguin/livewire-searchable-select)
 [![GitHub license](https://img.shields.io/github/license/fabioguin/livewire-searchable-select?style=for-the-badge)](https://github.com/fabioguin/livewire-searchable-select/blob/master/LICENSE)
 
-Livewire component for searchable select inputs
+High-performance Livewire component for searchable select inputs with relevance-based ordering, intelligent caching, and optimized UX.
+
+## Features
+
+- **High Performance**: Optimized database queries with intelligent caching
+- **Relevance-Based Ordering**: Smart search results ranked by relevance
+- **Debounced Input**: Smooth UX with 300ms debouncing to reduce server load
+- **Redis Caching**: Automatic caching of search results for better performance
+- **SQL Injection Protection**: Secure input sanitization and validation
+- **Responsive Design**: Works perfectly on all device sizes
+- **Customizable**: Easy to customize with CSS classes and configuration
+- **Model Scopes**: Support for complex model filtering with scopes
+- **Multi-language**: Built-in internationalization support
 
 ## Requirements
 - [Laravel 10 or 11](https://laravel.com/docs/10.x)
-- [Livewire](https://livewire.laravel.com/)
-- [Tailwind](https://tailwindcss.com/)
-- [Alpine JS](https://alpinejs.dev/)
+- [Livewire 3.0+](https://livewire.laravel.com/)
+- [Alpine JS](https://alpinejs.dev/) (included with Livewire)
+- [Redis](https://redis.io/) (optional, for caching)
 
 ## Installation
 
@@ -20,16 +32,30 @@ You can install the package via composer:
 composer require fabioguin/livewire-searchable-select
 ```
 
+### Redis Configuration (Optional but Recommended)
+
+For optimal performance, configure Redis as your cache driver:
+
+```bash
+# In your .env file
+CACHE_DRIVER=redis
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD=null
+REDIS_PORT=6379
+```
+
+The package will automatically use Redis for caching search results, significantly improving performance.
+
 ## Basic Usage
 
 - use trait ```SearchableSelect``` in your livewire component:
 ```php
 <?php
 
-namespace App\Http\Livewire\CreateUser
+namespace App\Http\Livewire\CreateUser;
 
 use Livewire\Component;
-use FabioGuin\LivewireSearchableSelect\SearchableSelect;
+use FabioGuin\LivewireSearchableSelect\Traits\SearchableSelect;
 
 class CreateUser extends Component
 {
@@ -58,6 +84,33 @@ class CreateUser extends Component
         input-extra-classes="mt-3"
         input-placeholder="Select country" />
 
+```
+
+## Performance Features
+
+### Intelligent Caching
+The component automatically caches search results for 5 minutes, dramatically reducing database load:
+
+```php
+// Results are automatically cached with intelligent cache keys
+// Cache duration: 5 minutes (configurable)
+// Cache driver: Uses your configured cache driver (Redis recommended)
+```
+
+### Relevance-Based Ordering
+Search results are intelligently ordered by relevance:
+
+- **Exact match**: 100 points
+- **Starts with**: 80 points  
+- **Contains**: 60 points
+- **Ends with**: 40 points
+
+### Debounced Input
+Input is debounced by 300ms to prevent excessive server requests:
+
+```html
+<!-- Automatically debounced - no configuration needed -->
+<livewire:select-searchable-input ... />
 ```
 
 ### Properties
@@ -110,16 +163,48 @@ php artisan vendor:publish --provider="FabioGuin\LivewireSearchableSelect\Livewi
 
 This will publish the language files to **resources/lang/vendor/livewire-searchable-select**. You can edit these files to change the text used by **Livewire Select**.
 
-## TODO and Future Developments
-The **Livewire Select** package is currently under development and there are several features and improvements planned for future releases. 
+## What's New in v2.0.0
 
-Here is a list of the planned tasks:
+### Major Improvements
+- **Refactored Architecture**: Complete separation of concerns with Config and Service classes
+- **Security Enhanced**: SQL injection protection with input sanitization
+- **Performance Optimized**: Intelligent caching and query optimization
+- **Smart Ordering**: Relevance-based search result ranking
+- **Better UX**: Debounced input for smooth user experience
+- **Test Coverage**: Comprehensive test suite for reliability
 
-- **Support for Tailwind CSS and Bootstrap 4:** Currently, the views are designed for Bootstrap 5. However, the goal is to add support for Tailwind CSS and Bootstrap 4. This will require creating separate versions of the views for each of these CSS frameworks.
-- **Documentation Improvements:** The documentation will be continuously updated to reflect new features and improvements. This includes adding more examples and tutorials.
-- **Testing and Bug Fixes:** We will continue to test the package to identify and fix any bugs. If you find a bug, please report it via the “Issues” section on GitHub.
-- **Performance Improvements:** We are always looking for ways to improve the performance of the package. This could include optimizing the code and adding new features to improve efficiency.
-- **Support for Other Livewire Features:** We are exploring the possibility of adding support for other Livewire features, such as pagination and lazy loading.
+### Breaking Changes
+- **Namespace Update**: `SearchableSelect` trait moved to `FabioGuin\LivewireSearchableSelect\Traits\SearchableSelect`
+- **Architecture**: New Config and Service classes for better maintainability
+- **Input Handling**: Replaced `wire:model` with debounced Alpine.js input
+
+## Migration from v1.x
+
+### 1. Update Trait Import
+```php
+// Before (v1.x)
+use FabioGuin\LivewireSearchableSelect\SearchableSelect;
+
+// After (v2.0.0)
+use FabioGuin\LivewireSearchableSelect\Traits\SearchableSelect;
+```
+
+### 2. No Other Changes Required
+The component API remains the same, so your existing Blade templates will continue to work without modification.
+
+### 3. Optional: Enable Redis Caching
+For better performance, configure Redis as your cache driver (see Installation section above).
+
+## Future Developments
+
+The package is actively maintained with the following planned features:
+
+- **CSS Framework Support**: Tailwind CSS and Bootstrap 4/5 compatibility
+- **Advanced Analytics**: Search analytics and performance metrics
+- **Real-time Updates**: WebSocket support for live updates
+- **Enhanced i18n**: More language support and RTL compatibility
+- **Mobile Optimization**: Touch-friendly mobile interactions
+- **Advanced Search**: Fuzzy search and typo tolerance
 
 Inspired by https://github.com/mitratek/livewire-select
 

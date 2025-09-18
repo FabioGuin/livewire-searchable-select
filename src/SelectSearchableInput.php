@@ -2,7 +2,7 @@
 
 namespace FabioGuin\LivewireSearchableSelect;
 
-use FabioGuin\LivewireSearchableSelect\Config\SearchableSelectConfig;
+use FabioGuin\LivewireSearchableSelect\DTOs\SearchableSelectConfig;
 use FabioGuin\LivewireSearchableSelect\Services\SearchableSelectService;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Locked;

@@ -2,7 +2,7 @@
 
 namespace FabioGuin\LivewireSearchableSelect\Services;
 
-use FabioGuin\LivewireSearchableSelect\Config\SearchableSelectConfig;
+use FabioGuin\LivewireSearchableSelect\DTOs\SearchableSelectConfig;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
