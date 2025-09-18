@@ -2,14 +2,17 @@
 
 namespace FabioGuin\LivewireSearchableSelect;
 
-use FabioGuin\LivewireSearchableSelect\Traits\Searchable;
+use FabioGuin\LivewireSearchableSelect\Config\SearchableSelectConfig;
+use FabioGuin\LivewireSearchableSelect\Services\SearchableSelectService;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Locked;
 use Livewire\Component;
 
 class SelectSearchableInput extends Component
 {
-    use Searchable;
+    private ?SearchableSelectConfig $config = null;
+
+    private ?SearchableSelectService $searchService = null;
 
     public string $property;
 
@@ -48,34 +51,51 @@ class SelectSearchableInput extends Component
         array $searchColumns,
         string $optionText,
         string $optionValueColumn,
-        int $searchMinChars,
-        ?string $inputPlaceholder,
-        ?string $modelApp,
+        int $searchMinChars = 0,
+        ?string $inputPlaceholder = null,
+        ?string $modelApp = null,
         ?int $searchLimitResults = 10,
         mixed $activeOptionText = null,
         mixed $activeOptionValue = null,
         ?string $inputExtraClasses = null,
         ?string $modelAppScope = null
     ): void {
-        // Input-related properties
+        // Initialize service and config
+        $this->initializeService();
+        $this->initializeConfig(
+            $property,
+            $searchColumns,
+            $optionText,
+            $optionValueColumn,
+            $searchMinChars,
+            $inputPlaceholder,
+            $modelApp,
+            $searchLimitResults,
+            $activeOptionText,
+            $activeOptionValue,
+            $inputExtraClasses,
+            $modelAppScope
+        );
+
+        // Set legacy properties for backward compatibility
         $this->property = $property;
         $this->inputPlaceholder = $inputPlaceholder;
         $this->inputExtraClasses = $inputExtraClasses;
-
-        // Search-related properties
         $this->searchMinChars = $searchMinChars;
         $this->searchLimitResults = $searchLimitResults;
         $this->searchColumns = $searchColumns;
-
-        // Data properties
         $this->optionText = $optionText;
         $this->optionValueColumn = $optionValueColumn;
         $this->modelApp = $modelApp;
         $this->modelAppScope = $modelAppScope;
-
-        // Active value
         $this->activeOptionText = $activeOptionText;
         $this->activeOptionValue = $activeOptionValue;
+
+        // Initialize results collection
+        $this->results = collect();
+
+        // Set initial state
+        $this->isSelected = ! is_null($this->activeOptionValue);
 
         if (
             $this->activeOptionText !== null
@@ -92,6 +112,45 @@ class SelectSearchableInput extends Component
         return view('livewire-searchable-select::select-searchable-input');
     }
 
+    private function initializeService(): void
+    {
+        if ($this->searchService === null) {
+            $this->searchService = app(SearchableSelectService::class);
+        }
+    }
+
+    private function initializeConfig(
+        string $property,
+        array $searchColumns,
+        string $optionText,
+        string $optionValueColumn,
+        int $searchMinChars,
+        ?string $inputPlaceholder,
+        ?string $modelApp,
+        ?int $searchLimitResults,
+        mixed $activeOptionText,
+        mixed $activeOptionValue,
+        ?string $inputExtraClasses,
+        ?string $modelAppScope
+    ): void {
+        if ($this->config === null) {
+            $this->config = new SearchableSelectConfig(
+                property: $property,
+                searchColumns: $searchColumns,
+                optionText: $optionText,
+                optionValueColumn: $optionValueColumn,
+                searchMinChars: $searchMinChars,
+                inputPlaceholder: $inputPlaceholder,
+                modelApp: $modelApp,
+                searchLimitResults: $searchLimitResults,
+                activeOptionText: $activeOptionText,
+                activeOptionValue: $activeOptionValue,
+                inputExtraClasses: $inputExtraClasses,
+                modelAppScope: $modelAppScope
+            );
+        }
+    }
+
     /**
      * Get the search results based on the search query and modelApp.
      * If the search query does not meet the minimum length requirement, an empty collection is returned.
@@ -101,33 +160,46 @@ class SelectSearchableInput extends Component
     {
         if (! $this->isSearchTermLengthValid()) {
             $this->results = collect();
-
             return;
         }
 
         $this->isSelected = false;
 
+        // Initialize service if not already done
+        $this->initializeService();
+
         if ($this->modelApp != null && class_exists($this->modelApp)) {
-            $query = $this->modelApp::query();
-
-            $query = $this->applyScopeToQuery($query);
-            $query = $this->applySearchConditionsToQuery($query);
-            $query = $this->applyRelevanceScoreToQuery($query);
-            $query = $this->applyLimitToQuery($query);
-
-            $this->results = $this->buildOptions($query->get());
+            $this->results = $this->searchService->search($this->config, $this->searchTherm);
+            $this->results = $this->buildOptions($this->results);
         }
     }
 
     private function isSearchTermLengthValid(): bool
     {
-        if (isset($this->searchMinChars) and strlen($this->searchTherm) < $this->searchMinChars) {
-            $this->setMessage(trans('livewire-searchable-select::messages.min_length', ['min' => $this->searchMinChars]));
-
-            return false;
-        } else {
-            return true;
+        // Initialize config if not already done (fallback to public property)
+        if ($this->config === null) {
+            $this->initializeConfig(
+                $this->property,
+                $this->searchColumns,
+                $this->optionText,
+                $this->optionValueColumn,
+                $this->searchMinChars,
+                $this->inputPlaceholder,
+                $this->modelApp,
+                $this->searchLimitResults,
+                $this->activeOptionText,
+                $this->activeOptionValue,
+                $this->inputExtraClasses,
+                $this->modelAppScope
+            );
         }
+
+        if (strlen($this->searchTherm) < $this->searchMinChars) {
+            $this->setMessage(trans('livewire-searchable-select::messages.min_length', ['min' => $this->searchMinChars]));
+            return false;
+        }
+
+        return true;
     }
 
     protected function buildOptions($dataList): Collection

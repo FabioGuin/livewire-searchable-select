@@ -32,11 +32,19 @@ trait Searchable
     private function applyRelevanceScoreToQuery($query)
     {
         $cases = [];
+        $searchTerm = DB::getPdo()->quote($this->searchTherm);
+        
         foreach ($this->searchColumns as $column) {
-            $cases[] = "WHEN {$column} LIKE '{$this->searchTherm}' THEN 10";
-            $cases[] = "WHEN {$column} LIKE '{$this->searchTherm}%' THEN 8";
-            $cases[] = "WHEN {$column} LIKE '%{$this->searchTherm}%' THEN 4";
-            $cases[] = "WHEN {$column} LIKE '%{$this->searchTherm}' THEN 2";
+            // Sanitize column name to prevent SQL injection
+            $sanitizedColumn = preg_replace('/[^a-zA-Z0-9_]/', '', $column);
+            if (empty($sanitizedColumn)) {
+                continue; // Skip invalid column names
+            }
+            
+            $cases[] = "WHEN {$sanitizedColumn} LIKE {$searchTerm} THEN 10";
+            $cases[] = "WHEN {$sanitizedColumn} LIKE CONCAT({$searchTerm}, '%') THEN 8";
+            $cases[] = "WHEN {$sanitizedColumn} LIKE CONCAT('%', {$searchTerm}, '%') THEN 4";
+            $cases[] = "WHEN {$sanitizedColumn} LIKE CONCAT('%', {$searchTerm}) THEN 2";
         }
 
         $caseStatement = implode(' ', $cases);
