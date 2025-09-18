@@ -23,10 +23,10 @@ class SearchableSelectService
         return Cache::remember($cacheKey, 300, function () use ($config, $searchTerm) {
             $query = $this->buildBaseQuery($config);
             $query = $this->applySearchFilters($query, $config, $searchTerm);
-            
+
             // Optimize query by selecting only necessary columns first
             $query = $this->optimizeSelectColumns($query, $config);
-            
+
             // Apply relevance scoring and ordering
             $query = $this->applyRelevanceScore($query, $config, $searchTerm);
             $query = $this->applyLimit($query, $config);
@@ -108,13 +108,13 @@ class SearchableSelectService
             END";
         }
 
-        if (!empty($relevanceCases)) {
+        if (! empty($relevanceCases)) {
             // Calculate total relevance score
-            $relevanceExpression = '(' . implode(' + ', $relevanceCases) . ')';
-            
+            $relevanceExpression = '('.implode(' + ', $relevanceCases).')';
+
             // Add relevance as a calculated field and order by it
             $query->addSelect(DB::raw("{$relevanceExpression} as relevance_score"))
-                  ->orderBy('relevance_score', 'desc');
+                ->orderBy('relevance_score', 'desc');
         }
 
         return $query;

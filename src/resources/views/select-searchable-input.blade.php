@@ -1,11 +1,11 @@
-<div x-data="{ dropdownOpen: false }" class="position-relative">
-    <input @click="dropdownOpen = ! dropdownOpen; $wire.set('searchTerm', null)"
+<div x-data="{ dropdownOpen: false, searchTerm: '' }" class="position-relative">
+    <input @click="dropdownOpen = ! dropdownOpen; searchTerm = ''; $wire.set('searchTerm', null)"
            @click.away="dropdownOpen = false; $wire.set('message', null)"
            type="text"
-           wire:model="searchTerm"
-           wire:input="getResults; dropdownOpen = true"
-           wire:keydown="getResults; dropdownOpen = true"
-           wire:keydown.delete="getResults; dropdownOpen = true"
+           x-model="searchTerm"
+           x-on:input.debounce.300ms="$wire.set('searchTerm', $event.target.value); $wire.getResults(); dropdownOpen = true"
+           x-on:keydown.debounce.300ms="$wire.set('searchTerm', $event.target.value); $wire.getResults(); dropdownOpen = true"
+           x-on:keydown.delete.debounce.300ms="$wire.set('searchTerm', $event.target.value); $wire.getResults(); dropdownOpen = true"
            class="select-searchable-input form-control {{ $inputExtraClasses }}"
            placeholder="{{ $inputPlaceholder }}" />
 
