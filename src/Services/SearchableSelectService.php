@@ -23,11 +23,13 @@ class SearchableSelectService
         return Cache::remember($cacheKey, 300, function () use ($config, $searchTerm) {
             $query = $this->buildBaseQuery($config);
             $query = $this->applySearchFilters($query, $config, $searchTerm);
+            
+            // Optimize query by selecting only necessary columns first
+            $query = $this->optimizeSelectColumns($query, $config);
+            
+            // Apply relevance scoring and ordering
             $query = $this->applyRelevanceScore($query, $config, $searchTerm);
             $query = $this->applyLimit($query, $config);
-
-            // Optimize query by selecting only necessary columns
-            $query = $this->optimizeSelectColumns($query, $config);
 
             return $query->get();
         });
@@ -82,8 +84,12 @@ class SearchableSelectService
 
     private function applyRelevanceScore(Builder $query, SearchableSelectConfig $config, string $searchTerm): Builder
     {
-        $cases = [];
+        if (empty($config->searchColumns)) {
+            return $query;
+        }
+
         $quotedSearchTerm = DB::getPdo()->quote($searchTerm);
+        $relevanceCases = [];
 
         foreach ($config->searchColumns as $column) {
             // Sanitize column name to prevent SQL injection
@@ -92,21 +98,26 @@ class SearchableSelectService
                 continue; // Skip invalid column names
             }
 
-            $cases[] = "WHEN {$sanitizedColumn} LIKE {$quotedSearchTerm} THEN 10";
-            $cases[] = "WHEN {$sanitizedColumn} LIKE CONCAT({$quotedSearchTerm}, '%') THEN 8";
-            $cases[] = "WHEN {$sanitizedColumn} LIKE CONCAT('%', {$quotedSearchTerm}, '%') THEN 4";
-            $cases[] = "WHEN {$sanitizedColumn} LIKE CONCAT('%', {$quotedSearchTerm}) THEN 2";
+            // Create relevance scoring based on match position and type
+            $relevanceCases[] = "CASE 
+                WHEN {$sanitizedColumn} = {$quotedSearchTerm} THEN 100
+                WHEN {$sanitizedColumn} LIKE CONCAT({$quotedSearchTerm}, '%') THEN 80
+                WHEN {$sanitizedColumn} LIKE CONCAT('%', {$quotedSearchTerm}, '%') THEN 60
+                WHEN {$sanitizedColumn} LIKE CONCAT('%', {$quotedSearchTerm}) THEN 40
+                ELSE 0
+            END";
         }
 
-        $caseStatement = implode(' ', $cases);
+        if (!empty($relevanceCases)) {
+            // Calculate total relevance score
+            $relevanceExpression = '(' . implode(' + ', $relevanceCases) . ')';
+            
+            // Add relevance as a calculated field and order by it
+            $query->addSelect(DB::raw("{$relevanceExpression} as relevance_score"))
+                  ->orderBy('relevance_score', 'desc');
+        }
 
-        return $query->select('*', DB::raw("(
-                CASE
-                    {$caseStatement}
-                    ELSE 1
-                END
-            ) as relevance"))
-            ->orderBy('relevance', 'desc');
+        return $query;
     }
 
     private function applyLimit(Builder $query, SearchableSelectConfig $config): Builder
