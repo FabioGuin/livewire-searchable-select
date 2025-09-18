@@ -36,7 +36,7 @@ class SelectSearchableInput extends Component
 
     public Collection $results;
 
-    public ?string $searchTherm = null;
+    public ?string $searchTerm = null;
 
     public bool $isSelected = false;
 
@@ -170,34 +170,15 @@ class SelectSearchableInput extends Component
         $this->initializeService();
 
         if ($this->modelApp != null && class_exists($this->modelApp)) {
-            $this->results = $this->searchService->search($this->config, $this->searchTherm);
+            $this->results = $this->searchService->search($this->config, $this->searchTerm);
             $this->results = $this->buildOptions($this->results);
         }
     }
 
     private function isSearchTermLengthValid(): bool
     {
-        // Initialize config if not already done (fallback to public property)
-        if ($this->config === null) {
-            $this->initializeConfig(
-                $this->property,
-                $this->searchColumns,
-                $this->optionText,
-                $this->optionValueColumn,
-                $this->searchMinChars,
-                $this->inputPlaceholder,
-                $this->modelApp,
-                $this->searchLimitResults,
-                $this->activeOptionText,
-                $this->activeOptionValue,
-                $this->inputExtraClasses,
-                $this->modelAppScope
-            );
-        }
-
-        if (strlen($this->searchTherm) < $this->searchMinChars) {
+        if (strlen($this->searchTerm) < $this->searchMinChars) {
             $this->setMessage(trans('livewire-searchable-select::messages.min_length', ['min' => $this->searchMinChars]));
-
             return false;
         }
 
@@ -223,7 +204,7 @@ class SelectSearchableInput extends Component
     public function getValueOption($id, $value): void
     {
         $value = htmlspecialchars_decode($value, ENT_QUOTES);
-        $this->searchTherm = $value;
+        $this->searchTerm = $value;
         $this->isSelected = true;
         $this->message = null;
 
@@ -232,7 +213,7 @@ class SelectSearchableInput extends Component
 
     public function clearSelectedValue(): void
     {
-        $this->searchTherm = null;
+        $this->searchTerm = null;
         $this->isSelected = false;
         $this->message = null;
         $this->results = collect();

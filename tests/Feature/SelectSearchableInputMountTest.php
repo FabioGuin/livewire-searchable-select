@@ -98,7 +98,7 @@ class SelectSearchableInputMountTest extends TestCase
 
         $this->component->getValueOption($activeOptionValue, $activeOptionText);
 
-        $this->assertEquals($activeOptionText, $this->component->searchTherm);
+        $this->assertEquals($activeOptionText, $this->component->searchTerm);
         $this->assertTrue($this->component->isSelected);
         $this->assertNull($this->component->message);
     }
