@@ -160,6 +160,7 @@ class SelectSearchableInput extends Component
     {
         if (! $this->isSearchTermLengthValid()) {
             $this->results = collect();
+
             return;
         }
 
@@ -196,6 +197,7 @@ class SelectSearchableInput extends Component
 
         if (strlen($this->searchTherm) < $this->searchMinChars) {
             $this->setMessage(trans('livewire-searchable-select::messages.min_length', ['min' => $this->searchMinChars]));
+
             return false;
         }
 

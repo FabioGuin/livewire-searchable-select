@@ -5,6 +5,7 @@ namespace FabioGuin\LivewireSearchableSelect\Services;
 use FabioGuin\LivewireSearchableSelect\Config\SearchableSelectConfig;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class SearchableSelectService
@@ -15,12 +16,21 @@ class SearchableSelectService
             return collect();
         }
 
-        $query = $this->buildBaseQuery($config);
-        $query = $this->applySearchFilters($query, $config, $searchTerm);
-        $query = $this->applyRelevanceScore($query, $config, $searchTerm);
-        $query = $this->applyLimit($query, $config);
+        // Generate cache key for this search
+        $cacheKey = $this->generateCacheKey($config, $searchTerm);
 
-        return $query->get();
+        // Try to get from cache first
+        return Cache::remember($cacheKey, 300, function () use ($config, $searchTerm) {
+            $query = $this->buildBaseQuery($config);
+            $query = $this->applySearchFilters($query, $config, $searchTerm);
+            $query = $this->applyRelevanceScore($query, $config, $searchTerm);
+            $query = $this->applyLimit($query, $config);
+
+            // Optimize query by selecting only necessary columns
+            $query = $this->optimizeSelectColumns($query, $config);
+
+            return $query->get();
+        });
     }
 
     public function getSelectedOption(SearchableSelectConfig $config, mixed $value): ?object
@@ -33,6 +43,20 @@ class SearchableSelectService
         $query->where($config->optionValueColumn, $value);
 
         return $query->first();
+    }
+
+    public function clearCache(SearchableSelectConfig $config): void
+    {
+        $pattern = 'searchable_select:'.md5(serialize([
+            'model' => $config->modelApp,
+            'scope' => $config->modelAppScope,
+        ])).'*';
+
+        // Clear cache entries matching the pattern
+        $keys = Cache::getRedis()->keys($pattern);
+        if (! empty($keys)) {
+            Cache::getRedis()->del($keys);
+        }
     }
 
     private function buildBaseQuery(SearchableSelectConfig $config): Builder
@@ -51,7 +75,7 @@ class SearchableSelectService
     {
         return $query->where(function ($query) use ($config, $searchTerm) {
             foreach ($config->searchColumns as $column) {
-                $query->orWhere($column, 'like', '%' . $searchTerm . '%');
+                $query->orWhere($column, 'like', '%'.$searchTerm.'%');
             }
         });
     }
@@ -60,14 +84,14 @@ class SearchableSelectService
     {
         $cases = [];
         $quotedSearchTerm = DB::getPdo()->quote($searchTerm);
-        
+
         foreach ($config->searchColumns as $column) {
             // Sanitize column name to prevent SQL injection
             $sanitizedColumn = preg_replace('/[^a-zA-Z0-9_]/', '', $column);
             if (empty($sanitizedColumn)) {
                 continue; // Skip invalid column names
             }
-            
+
             $cases[] = "WHEN {$sanitizedColumn} LIKE {$quotedSearchTerm} THEN 10";
             $cases[] = "WHEN {$sanitizedColumn} LIKE CONCAT({$quotedSearchTerm}, '%') THEN 8";
             $cases[] = "WHEN {$sanitizedColumn} LIKE CONCAT('%', {$quotedSearchTerm}, '%') THEN 4";
@@ -92,5 +116,49 @@ class SearchableSelectService
         }
 
         return $query;
+    }
+
+    private function optimizeSelectColumns(Builder $query, SearchableSelectConfig $config): Builder
+    {
+        // Extract columns needed for optionText from the template
+        $requiredColumns = $this->extractColumnsFromTemplate($config->optionText);
+
+        // Add the option value column
+        $requiredColumns[] = $config->optionValueColumn;
+
+        // Add search columns for relevance calculation
+        $requiredColumns = array_merge($requiredColumns, $config->searchColumns);
+
+        // Remove duplicates and select only necessary columns
+        $requiredColumns = array_unique($requiredColumns);
+
+        return $query->select($requiredColumns);
+    }
+
+    private function extractColumnsFromTemplate(string $template): array
+    {
+        $columns = [];
+        preg_match_all('/\{([^}]+)\}/', $template, $matches);
+
+        if (isset($matches[1])) {
+            $columns = $matches[1];
+        }
+
+        return $columns;
+    }
+
+    private function generateCacheKey(SearchableSelectConfig $config, string $searchTerm): string
+    {
+        $keyData = [
+            'model' => $config->modelApp,
+            'scope' => $config->modelAppScope,
+            'search_columns' => $config->searchColumns,
+            'option_text' => $config->optionText,
+            'option_value' => $config->optionValueColumn,
+            'limit' => $config->searchLimitResults,
+            'search_term' => $searchTerm,
+        ];
+
+        return 'searchable_select:'.md5(serialize($keyData));
     }
 }
