@@ -179,6 +179,7 @@ class SelectSearchableInput extends Component
     {
         if (strlen($this->searchTerm) < $this->searchMinChars) {
             $this->setMessage(trans('livewire-searchable-select::messages.min_length', ['min' => $this->searchMinChars]));
+
             return false;
         }
 
