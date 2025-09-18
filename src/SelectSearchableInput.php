@@ -119,6 +119,26 @@ class SelectSearchableInput extends Component
         }
     }
 
+    private function initializeConfigIfNeeded(): void
+    {
+        if ($this->config === null) {
+            $this->initializeConfig(
+                $this->property,
+                $this->searchColumns,
+                $this->optionText,
+                $this->optionValueColumn,
+                $this->searchMinChars,
+                $this->inputPlaceholder,
+                $this->modelApp,
+                $this->searchLimitResults,
+                $this->activeOptionText,
+                $this->activeOptionValue,
+                $this->inputExtraClasses,
+                $this->modelAppScope
+            );
+        }
+    }
+
     private function initializeConfig(
         string $property,
         array $searchColumns,
@@ -166,8 +186,9 @@ class SelectSearchableInput extends Component
 
         $this->isSelected = false;
 
-        // Initialize service if not already done
+        // Initialize service and config if not already done
         $this->initializeService();
+        $this->initializeConfigIfNeeded();
 
         if ($this->modelApp != null && class_exists($this->modelApp)) {
             $this->results = $this->searchService->search($this->config, $this->searchTerm);
