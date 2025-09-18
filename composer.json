@@ -1,7 +1,8 @@
 {
     "name": "fabioguin/livewire-searchable-select",
-    "description": "Livewire component for searchable select inputs",
-    "keywords": ["laravel", "tailwind", "livewire", "select input", "component", "search", "input", "select2", "searchable"],
+    "description": "High-performance Livewire component for searchable select inputs with relevance-based ordering, caching, and optimized UX",
+    "version": "2.0.0",
+    "keywords": ["laravel", "livewire", "select", "searchable", "autocomplete", "debouncing", "caching", "relevance", "performance", "ux", "component"],
     "homepage": "https://github.com/fabioguin/livewire-searchable-select",
     "license": "MIT",
     "type": "library",
