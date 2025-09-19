@@ -1,7 +1,7 @@
 {
     "name": "fabioguin/livewire-searchable-select",
     "description": "High-performance Livewire component for searchable select inputs with relevance-based ordering, caching, and optimized UX",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "keywords": [
         "laravel",
         "livewire",

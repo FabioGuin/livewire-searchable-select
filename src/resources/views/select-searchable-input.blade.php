@@ -1,8 +1,8 @@
-<div x-data="{ dropdownOpen: false, searchTerm: '' }" class="position-relative">
-    <input @click="dropdownOpen = ! dropdownOpen; searchTerm = ''; $wire.set('searchTerm', null)"
+<div x-data="{ dropdownOpen: false }" class="position-relative">
+    <input @click="dropdownOpen = ! dropdownOpen; if (!$wire.isSelected) { $wire.set('searchTerm', null); }"
            @click.away="dropdownOpen = false; $wire.set('message', null)"
            type="text"
-           x-model="searchTerm"
+           x-model="$wire.searchTerm"
            x-on:input.debounce.300ms="$wire.set('searchTerm', $event.target.value); $wire.getResults(); dropdownOpen = true"
            x-on:keydown.debounce.300ms="$wire.set('searchTerm', $event.target.value); $wire.getResults(); dropdownOpen = true"
            x-on:keydown.delete.debounce.300ms="$wire.set('searchTerm', $event.target.value); $wire.getResults(); dropdownOpen = true"
@@ -16,7 +16,7 @@
     </div>
 
     <div wire:loading.remove wire:target="getResults" class="select-searchable-input-clear-value position-absolute top-50 end-0 px-2 translate-middle-y">
-        <div wire:click="clearSelectedValue">
+        <div wire:click="clearSelectedValue(); dropdownOpen = false">
             <x-clear-button />
         </div>
     </div>
@@ -31,7 +31,7 @@
         <div x-show="dropdownOpen" class="select-searchable-input-dropdown position-absolute z-index-1000 w-100 bg-light rounded-bottom shadow-lg max-h-52 overflow-auto">
 
             @foreach($results as $data)
-                <div wire:click="getValueOption('{{ addslashes(e($data['id'])) }}', '{{ addslashes(e($data['value'])) }}')"
+                <div wire:click="getValueOption('{{ addslashes(e($data['id'])) }}', '{{ addslashes(e($data['value'])) }}'); dropdownOpen = false"
                      wire:key="option-{{ $loop->index }}"
                      class="select-searchable-input-dropdown-option px-2 py-1 cursor-pointer">
                     {{ $data['value'] }}
